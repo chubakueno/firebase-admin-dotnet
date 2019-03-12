@@ -79,6 +79,21 @@ namespace FirebaseAdmin.Auth
             }
         }
 
+        public async Task<UserInfo> GetAccountInfoByEmail(
+            string email, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            const string lookupPath = "accounts:lookup";
+            var response = await this.PostAndDeserializeAsync<JObject>(
+                lookupPath, new { email = new[] { email } }, cancellationToken).ConfigureAwait(false);
+            var users = response["users"];
+            if (users == null || users[0] == null)
+            {
+                throw new FirebaseException($"Failed to get user by email: {email}");
+            }
+
+            return users[0].ToObject<UserInfo>();
+        }
+
         public void Dispose()
         {
             this.httpClient.Dispose();

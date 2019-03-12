@@ -314,6 +314,20 @@ namespace FirebaseAdmin.Auth
         }
 
         /// <summary>
+        /// Gets an <see cref="UserInfo"/> of the user found by email.
+        /// </summary>
+        /// <returns>A task that contains the user retrieved.</returns>
+        /// <exception cref="FirebaseException">If  user with email <paramref name="email"/> doesn't exist.</exception>
+        /// <param name="email">The user ID string for the custom claims will be set. Must not be null.
+        /// </param>
+        public async Task<UserInfo> GetUserByEmail(string email)
+        {
+            var userManager = this.IfNotDeleted(() => this.userManager.Value);
+
+            return await userManager.GetAccountInfoByEmail(email, default).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Deletes this <see cref="FirebaseAuth"/> service instance.
         /// </summary>
         void IFirebaseService.Delete()
